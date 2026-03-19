@@ -1,19 +1,23 @@
 const express = require('express');
 const cors = require('cors');
-const app = express();
+require('dotenv').config();
 
+const app = express();
 app.use(cors());
 app.use(express.json());
 
-// นำเข้า Routes
-const customersRouter = require('./routes/customers');
-const productsRouter = require('./routes/products');
-const ordersRouter = require('./routes/orders');
+const customersRoutes = require('./routes/customers');
+const productsRoutes = require('./routes/products');
+const ordersRoutes = require('./routes/orders');
 
-// ใช้งาน Routes
-app.use('/api/customers', customersRouter);
-app.use('/api/products', productsRouter);
-app.use('/api/orders', ordersRouter);
+app.use('/api/customers', customersRoutes);
+app.use('/api/products', productsRoutes);
+app.use('/api/orders', ordersRoutes);
 
-// ส่งออก app สำหรับ Vercel
+// Start server only when not in production (for Vercel compatibility)
+if (process.env.NODE_ENV !== 'production') {
+    const PORT = 3333;
+    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
+
 module.exports = app;
